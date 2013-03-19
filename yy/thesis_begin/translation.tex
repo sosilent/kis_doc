@@ -1,0 +1,114 @@
+\documentclass[CJK,12pt,a4paper]{article}
+\usepackage{xeCJK}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{supertabular}
+\usepackage{cases}
+\usepackage{supertabular}
+\setCJKmainfont{SimSun}
+\setCJKfamilyfont{hei}{SimHei}
+\setlength{\parindent}{2.3em}
+\linespread{1.3}
+\setlength{\footskip}{1cm}
+\setlength{\textheight}{21.5cm}
+\usepackage{graphicx}
+
+\lstset{numbers=left,frame=shadowbox}
+
+\begin{document}
+\title{\CJKfamily{hei}\large 论文翻译\\
+\LARGE Keeping Kernel Performance from Regressions\\
+\CJKfamily{hei}让内核性能不再下降}
+\author{\CJKfamily{hei}翻译者\\杨\ 扬~~\CJKfamily{hei} 2009010511\\\CJKfamily{hei}清华大学\ \ \CJKfamily{hei}计95 }
+\date{2013年3月12日}
+\maketitle
+
+
+\pagestyle{fancy}
+\lhead{毕业论文开题报告－论文翻译}
+\rhead{翻译者：杨~扬~~~2009010511}
+
+\section*{\CJKfamily{hei}摘要}
+随着每个月上千个补丁的进入，Linux内核正在不断地快速发展。为了适应这样快速的开发节奏，我们需要一种方法来确保被合并进入主线的补丁没有造成性能下降。
+
+Linux Kernel Performance项目始于2005年7月，是Intel为了确保内核的每一个发行节点都被关键的负载测试所作出的贡献。在本篇文章中，我们将介绍我们的测试基础设施、测试方法和在2.6版本内核的开发周期内的测试结果。我们也将看到历史上出现的一些性能下降的例子，以及Intel和Linux社区是如何合作解决这些这些问题，使得Linux成为一个世界级的企业操作系统。
+\section{\CJKfamily{hei}介绍}
+最近几年，
+
+
+Intel的开源技术中心（OTC）于2005年启动了Linux Kernel Performance（LKP）项目。
+\section{\CJKfamily{hei}测试过程}
+每一个Linux内核的发行候选版本都将会触发我们的测试基础设施，无论新的内核是在什么时候发布的，系统都将在一个小时之内运行标准测试样例。否则，如果一周之内没有-rc版本发布，我们将会在周末使用罪行的git的内核版本进行测试。测试结果每一周都将会被检查。异常的结果将会被再次检查，如果必要的话测试会重新运行。测试的结果将会被上传到一个能够用web界面访问的数据库。如果发现了任何比较大的性能变化，我们将会调查其原因并且在Linux内核的邮件列表中讨论。
+
+我们也将把我们的网站向社区成员公开，让他们能够看到每一个版本内核的性能提升和损失。最后，我们希望能够在内核主版本发布之前发现性能下降，以便性能能够得到持续性的提高。
+\subsection{\CJKfamily{hei}标准测试用例}
+我们将运行一组覆盖Linux内核核心功能（内存管理，I/O子系统，进程调度，文件系统，网络栈等）的标准测试用例。
+
+表1列出并描述了每个标准测试集。大部分的标准测试集都是开源的，并且能够被其他人轻易复制。
+
+。。。
+\subsection{\CJKfamily{hei}测试平台}
+目前，我们拥有一些Itanium SMP和Xeon SMP的机器作为我们的测试平台，配置如下所列：
+
+\begin{itemize}
+\item 4P Intel Itanium$^{TM}$ 2 processor (1.6Ghz)\item 4P Dual-Core Intel Itanium processor (1.5Ghz) 
+\item 2P Intel Xeon MP processor (3.4Ghz)\item 4P Dual-Core Intel Xeon MP processor (3.0Ghz) 
+\item 2P Xeon Core$^{TM}$ 2 Duo processor (2.66Ghz)\item 2P Xeon Core$^{TM}$ 2 Quad processor (2.40Ghz)
+\end{itemize}
+\subsection{\CJKfamily{hei}测试管理}
+我们需要一个测试管理来自动在测试机器上面进行日常的标准测试集运行。尽管已经有Scalable Test Platform(http://sourceforge.net/projects/stp)和Linux Test Project(http://ltp.sourceforge.net)这样的测试管理工具，但是它们并不能满足我们所有的测试需求。我们选择编写一组shell脚本作为我们的测试管理，这将使我们能够轻易添加我们需要的新功能。
+
+我们的测试管理提供了下列的服务：
+\begin{itemize}
+\item 它能够侦测新版本Linux内核，并能够在新内核发布三十分钟内从kernel.org上面下载新版本的Linux内核，然后能够自动安装内核以及在多个测试平台上启动标准测试集
+\item 它能够在任何内核上测试补丁，并且能够和其他版本的内核进行结果比较
+\item 它能够通过重复进行git-bisect和内核安装循环来过滤相关的补丁并最终定位引起性能损失的补丁
+\item 它能够把标准测试集在不同内核和平台上运行的结果上传到一个数据库中。测试结果和相应的分析数据都能够通过友好的网页界面进行访问
+\item 它能够将测试任务进行排队，这使得不同的测试能够按顺序一次执行而不会互相干扰
+\item 它能够调用不同的标准测试集和分析工具
+\end{itemize}
+
+
+
+。。。
+
+
+\section{\CJKfamily{hei}性能改变}
+在项目运行的过程中，我们系统的测试已经发现了内核中的多个性能问题。表2是一部分性能改变的列表。在后面的讨论中，我们会针对其中的一些做详细地阐述。
+\subsection{\CJKfamily{hei}硬盘I/O}
+\subsubsection{\CJKfamily{hei}MPT Fusion Driver Bug}
+\subsection{\CJKfamily{hei}调度器}
+\subsubsection{\CJKfamily{hei}丢失处理器间中断}
+\subsubsection{\CJKfamily{hei}调度器域问题}
+\subsubsection{\CJKfamily{hei}Rotating Staircase Dead Line Scheduler}
+\subsection{\CJKfamily{hei}内存访问}
+\subsubsection{\CJKfamily{hei}在内核和用户控制之间复制数据}
+\subsection{\CJKfamily{hei}其他杂项}
+\subsubsection{\CJKfamily{hei}半虚拟化}
+半虚拟化选项在2.6.20版本中被引进，我们在Netperf和Volanomark测试中检测到了3\%的性能下降。我们发现半虚拟化已经关闭了VDSO，这导致了系统调用使用了int 0x80而不是效率更高的sysenter，而正是这导致了性能的下降。
+\subsubsection{\CJKfamily{hei}中断跟踪损耗}
+\subsubsection{\CJKfamily{hei}Cache Line Bouncing}
+\section{\CJKfamily{hei}测试方法}
+\subsection{\CJKfamily{hei}测试配置}
+\subsection{\CJKfamily{hei}测试中处理}
+\subsection{\CJKfamily{hei}分析}
+\subsection{\CJKfamily{hei}自动git-bisect}
+git的bisect是一个定位问题补丁的强有力工具。然而，手动地重复运行bisect来寻找出现bug的补丁是非常乏味的。一个人必须进行整个bisect的过程，重新编译，安装，重新启动内核，运行标准测试集来确定某个补丁导致了性能的提升还是性能的下降，然后判断两个补丁子集合中哪一个造成了性能的变化。然后在包含问题的补丁集合中重新进行上面的步骤。每两个发行候选版本之间一般会有上百个补丁，那么需要重复8到10次才能找到造成问题的补丁。我们在我们的测试管理中添加了自动进行bisect和运行标准测试的功能。以迭代复杂度为$O(\log{n})$的方法自动找到导致性能问题的补丁是非常有用的。
+\subsection{\CJKfamily{hei}结果呈现}
+在我们的标准测试集运行i结束之后，一个封装脚本将会从每一个标准测试中收集输出信息并把这些信息放入一个CSV（逗号分割值）格式文件中，这个输出文件将会由MySQL数据库进行解析。最后的结果将会以表和和性能百分比变化比较图的形式呈现在外部网站http://kernl-perf.sourceforge.net上。我们的内部网站将显示额外的运行时数据，内核配置文件，分析结果，以及控制是否重新运行或者利用git进行bisect。
+\subsection{\CJKfamily{hei}性能索引}
+
+\section{\CJKfamily{hei}结论}
+我们的项目建立了一个内核测试基础设施，这个基础设施将会在多个平台用多个标准测试样例来测试每一个内核发行候选版本，同时也把测试的结果放在我们网站http://kernel-perf.sourceforge.net上，并向社区开放。结果，我们现在已经能够快速地捕捉到内核的性能下降，并且通过和社区合作来解决这些问题。然而，随着内核的快速发展变化，我们的日常测试只能发现一部分的性能下降。我们希望这项工作能够鼓励更多的人来做日常的和系统的Linux内核测试，防止性能下降的内核随着Linux发行版扩散出去。这将巩固Linux作为世界级企业操作系统的地位。
+\section*{\CJKfamily{hei}致谢}
+在此，我们对我们之前的同事Ken Chen, Rohit Seth, Vladimir Sheviakov, Davis Hart和Ben LaHaise，以及所有对项目的创建和运作进行过指导的人们表示感谢。另外，我们要特别感谢Ken，因为他是这个项目的主要推动者和主要贡献者。
+\section*{\CJKfamily{hei}法律说明}
+本文的版权为Intel。需要被授予权利之后才能够进行重新发布，保留所有其他权利。
+\section*{\CJKfamily{hei}引用}
+
+
+
+
+\end{document}
